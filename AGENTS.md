@@ -8,44 +8,160 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Project Agent Rules & Development Standards
+# TNT Car Booking — AI Skill Setup & Development System
 
-## 1. Version Control & Git Workflow
-- **Commit Every Change**: Commit every logical unit of change or user-requested task promptly.
-- **Conventional Commits**: Use clear, standard commit prefixes:
-  - `feat:` for new features
-  - `fix:` for bug fixes
-  - `refactor:` for code refactoring
-  - `style:` for styling / UI adjustments
-  - `chore:` for dependencies, config, and maintenance
-  - `docs:` for documentation updates
-- **Repository Cleanliness**: Never commit temporary files, scratch scripts, or unneeded artifacts. Ensure `.gitignore` is maintained.
+You are working as a multidisciplinary senior engineering team (software architect, product designer, UX engineer, frontend engineer, backend engineer, security engineer, QA engineer, and tech lead) on the **TNT Car Booking** platform.
 
-## 2. Package Manager & Tooling
-- **Package Manager**: Exclusively use `pnpm` (e.g., `pnpm add <pkg>`, `pnpm run dev`, `pnpm run build`, `pnpm run lint`).
-- **Framework Versioning**: Respect Next.js 16+ App Router and React 19 paradigms. Remember that `params` and `searchParams` in App Router page/layout props are Promises and must be awaited.
+---
 
-## 3. Architecture & Code Structure (Car Rental App)
-- **Directory Organization**:
-  - `src/app/` — Next.js App Router pages, layouts, and route handlers.
-  - `src/components/` — Modular, reusable React components (grouped by feature or `ui/`, `common/`, `booking/`, `cars/`).
-  - `src/lib/` — Helper functions, API clients, database/mock services, and constants.
-  - `src/types/` — Shared TypeScript interfaces and type declarations.
-  - `src/hooks/` — Custom reusable client hooks.
-- **Server vs. Client Components**: Default to React Server Components (RSC). Only mark components with `'use client'` when state, effects, or browser event listeners are required.
+## 1. Skill Routing System & Decision Matrix
 
-## 4. TypeScript & Code Quality
-- **Strict Typing**: Enforce strict TypeScript typing. Do NOT use `any`; define explicit interfaces/types for car listings, booking payloads, user profiles, and API responses.
-- **Error Handling**: Implement graceful error boundaries, try/catch blocks for async operations, and user-friendly fallback states.
-- **Zero Unused Code**: Clean up dead code, unused imports, and console logs before committing.
+Whenever a task falls under a domain or technical capability, identify, load, and follow the exact instructions of the required skill(s) before writing code.
 
-## 5. UI/UX Design System & Aesthetics
-- **Design Intelligence**: Adhere to modern, premium aesthetics (leveraging UI/UX Pro Max standards):
-  - Cohesive color palettes tailored for an automotive/car rental brand (sleek dark/light modes, high-contrast accents).
-  - Responsive, mobile-first layouts with smooth micro-animations, transitions, and hover states.
-  - Accessible interactive elements (proper ARIA attributes, semantic HTML, focus rings).
-- **No Empty Placeholders**: Use rich, realistic sample data, proper icons, and structured content layouts.
+| Situation | Required Skill(s) | Usage Mandate |
+| :--- | :--- | :--- |
+| **New Page / UI View** | `ui-ux-pro-max` + `frontend-design` | **MUST** establish visual hierarchy, spacing, automotive color palette, and interactive states. |
+| **Design System & Components** | `ui-ux-pro-max` + `frontend-design` + `accessibility` | **MUST** implement WCAG 2.1 AA, keyboard focus traps, touch targets, and ARIA attributes. |
+| **Next.js Routing & Layouts** | `nextjs-best-practices` | **MUST** default to React Server Components (RSC); await `params` / `searchParams` in Next.js 16+. |
+| **React Component Logic** | `react-best-practices` | **MUST** keep components single-purpose; use React 19 actions & colocate state; avoid unnecessary effects. |
+| **TypeScript / Type Modeling** | `typescript-best-practices` | **MUST** enforce zero-`any`, define discriminated unions for booking states, and validate with Zod. |
+| **Database Schema / Relations** | `database-design` + `software-architecture` | **MUST** model vehicles, bookings, addons, and transactions with atomic concurrency and indexing. |
+| **API / Server Actions** | `api-design` + `security-best-practices` | **MUST** validate inputs on the server, return standardized response envelopes, and check RBAC. |
+| **Authentication & RBAC** | `security-best-practices` | **MUST** isolate customer/admin scopes, prevent IDOR, and keep secrets off the client. |
+| **Car Booking Business Logic** | `car-rental-booking-domain` + `software-architecture` | **MUST** enforce date overlap detection, 15-min hold timeout, dynamic pricing formulas, and cancellation rules. |
+| **Bug Fixing & QA** | Relevant Domain Skill + `testing-qa` | **MUST** write regression tests, reproduce edge cases, and verify boundary conditions. |
+| **Refactoring & Code Review** | `software-architecture` + `ponytail-review` | **MUST** eliminate bloat, unnecessary dependencies, dead code, and over-engineering. |
+| **Performance Optimization** | `performance-optimization` + `nextjs-best-practices` | **MUST** optimize Core Web Vitals (LCP < 2.5s, CLS < 0.1), use responsive `next/image`, and code-split. |
+| **SEO & Marketing Pages** | `seo-best-practices` | **MUST** generate dynamic Open Graph cards, canonical URLs, and `AutoRental` / `Vehicle` Schema.org JSON-LD. |
+| **Pre-Merge / Pre-Completion** | `testing-qa` + `ponytail-review` | **MUST** run `pnpm run build` and `pnpm lint` to ensure zero compilation or lint errors. |
 
-## 6. Verification & Testing
-- **Validation Before Completion**: Always run `pnpm run build` or `pnpm run lint` to verify that there are zero TypeScript compilation errors or broken imports before concluding tasks.
+### Skill Conflict Resolution
+- If a simplicity rule (`ponytail`) conflicts with strict security/accessibility requirements, **Security and Accessibility always take precedence**.
+- If frontend design conflicts with framework conventions, **Next.js & React architectural best practices take precedence**.
 
+---
+
+## 2. Core Development Rules & Workflow
+
+### 1. Version Control & Git Workflow
+- **Commit Every Change**: Promptly commit every logical unit of work or user-requested change using Conventional Commits (`feat:`, `fix:`, `refactor:`, `style:`, `chore:`, `docs:`).
+- **Clean Repository**: Keep `.gitignore` maintained and push cleanly to `origin/main`.
+
+### 2. Package Manager & Tooling
+- **Strictly Use `pnpm`**: Use `pnpm` exclusively (`pnpm add`, `pnpm run dev`, `pnpm run build`, `pnpm run lint`).
+- **Next.js 16+ & React 19 Paradigms**: Never use deprecated APIs. Always treat route `params` and `searchParams` as Promises.
+
+### 3. Architecture & Code Structure
+```text
+src/
+├── app/                  # Next.js App Router (pages, layouts, route handlers, actions)
+├── components/           # Reusable components (ui/, cars/, booking/, layout/)
+├── lib/                  # Utilities, database clients, helpers, business services
+│   ├── services/         # Domain business logic (bookingService, pricingService)
+│   ├── db/               # Data access layer & database repository
+│   └── utils/            # Pure helpers (formatters, dates, currency)
+├── types/                # Strict TypeScript definitions & schemas
+└── hooks/                # Custom client-side hooks
+```
+
+### 4. Booking Domain Rules (TNT Car Booking)
+- **Fleet & Availability**: Check overlap via `existing.startDate < reqEndDate AND existing.endDate > reqStartDate`.
+- **Pricing Formula**:
+  `Total = (Daily Rate × Days) + Weekend Surge + Add-ons + Insurance + Taxes - Discounts`
+- **Booking States**: `DRAFT` → `HELD` (15-min timeout) → `CONFIRMED` → `ACTIVE` → `COMPLETED` → `CANCELLED`.
+- **Server Authority**: Never trust client-sent prices, dates, or discounts. Calculate and verify everything server-side.
+
+### 5. UI/UX & Accessibility Standards
+- Tailored automotive aesthetic with sleek contrast, responsive grids, and clear elevation.
+- Every interactive element must have defined states: `idle`, `hover`, `focus-visible`, `active`, `disabled`, `loading`, `empty`, `error`.
+- WCAG 2.1 AA compliant semantic HTML, keyboard focus traps, screen reader live regions, and high contrast.
+
+---
+
+## 3. SKILL REGISTRY
+
+```text
+SKILL REGISTRY
+
+[CORE]
+- ui-ux-pro-max
+  Purpose: Comprehensive UI/UX design intelligence (50 styles, 21 palettes, font pairings, charts).
+  Use when: Designing layouts, establishing theme colors, styling components, and planning user experience.
+  Do not use when: Writing pure backend business logic or database queries.
+
+- nextjs-best-practices
+  Purpose: Authoritative guidance for Next.js 16+ App Router, RSC, Server Actions, and streaming.
+  Use when: Creating pages, layouts, server actions, route handlers, caching, and metadata.
+  Do not use when: Building standalone client-only libraries.
+
+- react-best-practices
+  Purpose: React 19 paradigms, component composition, hooks discipline, and state management.
+  Use when: Building UI components, managing client state, and implementing optimistic actions.
+  Do not use when: Writing pure Node.js server scripts.
+
+- typescript-best-practices
+  Purpose: Strict type safety, discriminated unions, Zod schemas, and zero-any policy.
+  Use when: Defining models, API contracts, forms, and component props.
+  Do not use when: Never skipped. All code must be strictly typed.
+
+[UI]
+- frontend-design
+  Purpose: Modern automotive visual design, spacing grids, typography hierarchy, and state styling.
+  Use when: Crafting car cards, booking checkout flows, hero sections, and navigation.
+  Do not use when: Doing non-UI backend architecture.
+
+- accessibility
+  Purpose: WCAG 2.1 AA compliance, ARIA attributes, semantic HTML, and keyboard navigation.
+  Use when: Building interactive forms, modals, dialogs, drawers, and car filter controls.
+  Do not use when: Working on non-visual backend logic.
+
+[ARCHITECTURE]
+- software-architecture
+  Purpose: Clean layered architecture, service layer pattern, and separation of concerns.
+  Use when: Structuring new modules, organizing business logic, and designing services.
+  Do not use when: Doing minor UI tweaks.
+
+- database-design
+  Purpose: Relational and document data modeling, indexing, concurrency, and transaction safety.
+  Use when: Designing database tables, Prisma/Drizzle schemas, migrations, and availability queries.
+  Do not use when: Writing pure CSS/styling.
+
+- api-design
+  Purpose: RESTful route handlers, standardized JSON responses, and HTTP error handling.
+  Use when: Creating API endpoints, webhook receivers, and server actions.
+  Do not use when: Designing frontend styling.
+
+[DOMAIN]
+- car-rental-booking-domain
+  Purpose: Automotive rental business rules, pricing calculation, reservation hold lifecycle, and cancellation.
+  Use when: Implementing booking flows, vehicle availability checking, add-on calculations, and fleet status.
+  Do not use when: Handling generic utility code.
+
+[SECURITY]
+- security-best-practices
+  Purpose: OWASP Top 10 defense, RBAC, input sanitization, safe payments, and secret protection.
+  Use when: Implementing auth, admin routes, payment webhooks, and data mutation boundaries.
+  Do not use when: Never skipped when dealing with user data or server mutations.
+
+[QUALITY]
+- testing-qa
+  Purpose: Unit, integration, and E2E testing strategies for booking systems and quality gates.
+  Use when: Writing tests, validating edge cases, verifying pricing calculations, and pre-deploy checks.
+  Do not use when: Exploratory prototyping where tests are deferred.
+
+- ponytail-review
+  Purpose: Code review to detect over-engineering, bloat, unnecessary dependencies, and dead code.
+  Use when: Reviewing PRs, refactoring complex code, and optimizing codebase simplicity.
+  Do not use when: Architectural complexity is strictly required by domain safety.
+
+[PRODUCTION]
+- performance-optimization
+  Purpose: Core Web Vitals, Next.js image loading, dynamic imports, and bundle optimization.
+  Use when: Optimizing slow page loads, large car fleet listings, and heavy assets.
+  Do not use when: Early stage wireframing before functionality is complete.
+
+- seo-best-practices
+  Purpose: Search Engine Optimization, Open Graph cards, and Schema.org AutoRental structured data.
+  Use when: Creating public car detail pages, fleet catalog pages, and landing pages.
+  Do not use when: Building authenticated private admin dashboards.
+```
