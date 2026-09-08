@@ -199,7 +199,9 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
                   <div key={rev.id} className="border-t border-neutral-100 pt-3 dark:border-neutral-800">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-neutral-900 dark:text-white">{rev.customer.fullName}</span>
-                      <span className="text-neutral-400">{new Date(rev.createdAt).toLocaleDateString()}</span>
+                      <span className="text-neutral-400">
+                        {new Date(rev.createdAt).toISOString().split("T")[0]}
+                      </span>
                     </div>
                     <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                       {rev.comment}
