@@ -72,8 +72,12 @@ src/
 - **Server Authority**: Never trust client-sent prices, dates, or discounts. Calculate and verify everything server-side.
 
 ### 5. Database & Data Safety Rules
-- **Non-Destructive Operations Rule**:
-  > **NEVER run destructive database commands (e.g. `db push --force-reset`, `migrate reset`, `DROP TABLE`) against a shared, test, or production database without explicit user approval.**
+- **Hostinger Shared Database Policy**:
+  - The Hostinger MySQL database (`u249221993_temp_delete`) is a shared/client database and must be treated as persistent data.
+  - **Versioned Prisma migrations are the single source of truth for schema changes.**
+  - **NEVER run `prisma migrate reset`, destructive `db push`, `DROP TABLE`, `TRUNCATE`, or manual schema modifications on the shared/production database without explicit user approval.**
+  - Never modify production/shared database structure manually unless explicitly required and documented.
+  - Before applying any migration, review its SQL and verify the target database environment.
 - **Prisma Conventions**:
   - Always use the singleton client from `@/lib/db/prisma`.
   - Regenerate client types via `pnpm run db:generate` whenever `prisma/schema.prisma` is modified.
@@ -81,7 +85,7 @@ src/
   - Store real database connection strings only in `.env` / `.env.local` (strictly ignored by `.gitignore`).
   - `.env.example` must contain only generic dummy placeholders. Never print passwords or raw connection strings in logs or model responses.
 - **Migration Strategy**:
-  - Development: Use `pnpm run db:migrate` (`prisma migrate dev`) to create versioned SQL migrations.
+  - Development: Use versioned SQL migrations (`prisma/migrations/`) created via `pnpm run db:migrate`.
   - Production: Use `pnpm run db:deploy` (`prisma migrate deploy`) during deployment pipelines.
   - Review all generated migration SQL before committing.
 - **Financial Precision**:
@@ -90,6 +94,7 @@ src/
 - **Concurrency & Double-Booking Prevention**:
   - Prevent double bookings using atomic transactions (`prisma.$transaction`) with reservation hold states (`holdExpiresAt`) and date overlap logic:
     `existing.startDate < reqEndDate AND existing.endDate > reqStartDate`.
+
 
 ### 7. MVP SCOPE LOCK (Mandatory)
 The project is currently locked to **MVP only**.

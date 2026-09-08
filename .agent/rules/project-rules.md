@@ -28,12 +28,15 @@
 - Use discriminated unions for booking, payment, and async operation states.
 
 ## 6. Database & Data Safety Rules
+- **Hostinger Shared Database Policy**: The Hostinger MySQL database (`u249221993_temp_delete`) is a shared/client database and must be treated as persistent data.
+- **Versioned Migrations Source of Truth**: `prisma/migrations/` is the single source of truth.
 - **Non-Destructive Operations Rule**:
-  > **NEVER run destructive database commands (e.g. `db push --force-reset`, `migrate reset`, `DROP TABLE`) against a shared, test, or production database without explicit user approval.**
+  > **NEVER run `prisma migrate reset`, destructive `db push`, `DROP TABLE`, `TRUNCATE`, or manual schema modifications on the shared/production database without explicit user approval.**
 - **Prisma Singleton**: Use `@/lib/db/prisma` singleton client.
 - **Financial Precision**: All monetary rates, taxes, and totals must use `Decimal(10, 2)`. Never use JS floating-point arithmetic for authoritative pricing.
 - **Booking Concurrency**: Enforce atomic transactions (`prisma.$transaction`) and date overlap logic on the server.
 - **Migration Strategy**: Use versioned migrations (`pnpm run db:migrate`) for schema changes and review SQL before deploying.
+
 
 ## 7. MVP Scope Lock (Strict)
 - **MVP-Only Focus**: Build the smallest complete production-quality car booking product.
