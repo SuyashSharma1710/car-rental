@@ -11,9 +11,17 @@ export const metadata = {
 export default async function NewVehiclePage() {
   const categories = await getCategories();
 
+  const serializedCategories = categories.map((cat) => ({
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+    description: cat.description,
+    image: cat.image,
+  }));
+
   return (
     <div>
-      <VehicleForm categories={categories} />
+      <VehicleForm categories={serializedCategories} />
     </div>
   );
 }

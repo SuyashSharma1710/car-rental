@@ -37,6 +37,16 @@ body {
   flex-direction: column;
 }
 
+/* Ensure cross-browser form inputs and native selects maintain high-contrast colors */
+select, input, textarea {
+  color-scheme: light dark;
+}
+
+select option {
+  background-color: var(--card);
+  color: var(--card-foreground);
+}
+
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

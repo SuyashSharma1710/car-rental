@@ -3,15 +3,47 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { VehicleCategory } from "@prisma/client";
+import { VehicleStatus, TransmissionType, FuelType } from "@prisma/client";
 import { createVehicleAction, updateVehicleAction } from "@/lib/actions/adminActions";
-import { VehicleWithDetails } from "@/types/fleet";
 import { Loader2, ArrowLeft, Sparkles } from "lucide-react";
 import Link from "next/link";
 
+export interface SerializedCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  image: string | null;
+}
+
+export interface SerializedVehicle {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  licensePlate: string;
+  vin: string | null;
+  categoryId: string;
+  status: VehicleStatus;
+  transmission: TransmissionType;
+  fuelType: FuelType;
+  seats: number;
+  doors: number;
+  luggageCapacity: number;
+  mileage: number;
+  dailyRate: number | string;
+  hourlyRate: number | string | null;
+  securityDeposit: number | string;
+  isFeatured: boolean;
+  mainImage: string;
+  galleryImages: unknown;
+  features: unknown;
+  location: string;
+}
+
 interface VehicleFormProps {
-  categories: VehicleCategory[];
-  initialData?: VehicleWithDetails | null;
+  categories: SerializedCategory[];
+  initialData?: SerializedVehicle | null;
 }
 
 export function VehicleForm({ categories, initialData }: VehicleFormProps) {
@@ -56,6 +88,9 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
       }
     });
   };
+
+  const inputClasses =
+    "w-full rounded-xl border border-neutral-300 bg-white px-3.5 py-2.5 text-xs font-medium text-neutral-900 shadow-sm focus:border-sky-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
@@ -110,7 +145,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               required
               defaultValue={initialData?.make || ""}
               placeholder="e.g. Tesla, BMW, Toyota"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             />
           </div>
 
@@ -124,7 +159,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               required
               defaultValue={initialData?.model || ""}
               placeholder="e.g. Model 3, 5 Series, RAV4"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             />
           </div>
 
@@ -139,7 +174,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               min={1990}
               max={new Date().getFullYear() + 2}
               defaultValue={initialData?.year || new Date().getFullYear()}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             />
           </div>
         </div>
@@ -155,7 +190,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               required
               defaultValue={initialData?.licensePlate || ""}
               placeholder="e.g. TNT-8899"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-mono font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={`${inputClasses} font-mono`}
             />
           </div>
 
@@ -168,7 +203,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               type="text"
               defaultValue={initialData?.vin || ""}
               placeholder="17-character VIN"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-mono font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={`${inputClasses} font-mono`}
             />
           </div>
 
@@ -180,10 +215,14 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               name="categoryId"
               required
               defaultValue={initialData?.categoryId || (categories[0]?.id ?? "")}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             >
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
+                <option
+                  key={cat.id}
+                  value={cat.id}
+                  className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+                >
                   {cat.name}
                 </option>
               ))}
@@ -206,10 +245,20 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
             <select
               name="transmission"
               defaultValue={initialData?.transmission || "AUTOMATIC"}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             >
-              <option value="AUTOMATIC">Automatic</option>
-              <option value="MANUAL">Manual</option>
+              <option
+                value="AUTOMATIC"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Automatic
+              </option>
+              <option
+                value="MANUAL"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Manual
+              </option>
             </select>
           </div>
 
@@ -220,12 +269,32 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
             <select
               name="fuelType"
               defaultValue={initialData?.fuelType || "PETROL"}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             >
-              <option value="PETROL">Petrol</option>
-              <option value="DIESEL">Diesel</option>
-              <option value="ELECTRIC">Electric</option>
-              <option value="HYBRID">Hybrid</option>
+              <option
+                value="PETROL"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Petrol
+              </option>
+              <option
+                value="DIESEL"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Diesel
+              </option>
+              <option
+                value="ELECTRIC"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Electric
+              </option>
+              <option
+                value="HYBRID"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Hybrid
+              </option>
             </select>
           </div>
 
@@ -239,7 +308,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               min={1}
               max={20}
               defaultValue={initialData?.seats || 5}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             />
           </div>
 
@@ -253,7 +322,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               min={0}
               max={15}
               defaultValue={initialData?.luggageCapacity || 2}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             />
           </div>
         </div>
@@ -266,12 +335,32 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
             <select
               name="status"
               defaultValue={initialData?.status || "AVAILABLE"}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             >
-              <option value="AVAILABLE">Available</option>
-              <option value="RESERVED">Reserved</option>
-              <option value="RENTED">Rented</option>
-              <option value="MAINTENANCE">Maintenance</option>
+              <option
+                value="AVAILABLE"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Available
+              </option>
+              <option
+                value="RESERVED"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Reserved
+              </option>
+              <option
+                value="RENTED"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Rented
+              </option>
+              <option
+                value="MAINTENANCE"
+                className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+              >
+                Maintenance
+              </option>
             </select>
           </div>
 
@@ -284,7 +373,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               type="number"
               min={0}
               defaultValue={initialData?.mileage || 0}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             />
           </div>
 
@@ -296,7 +385,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               name="location"
               type="text"
               defaultValue={initialData?.location || "Main Airport Hub"}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             />
           </div>
         </div>
@@ -320,7 +409,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               required
               min={1}
               defaultValue={initialData ? Number(initialData.dailyRate) : 89}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-bold focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={`${inputClasses} font-bold`}
             />
           </div>
 
@@ -334,7 +423,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               step="0.01"
               defaultValue={initialData?.hourlyRate ? Number(initialData.hourlyRate) : ""}
               placeholder="e.g. 15.00"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             />
           </div>
 
@@ -348,7 +437,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
               step="0.01"
               min={0}
               defaultValue={initialData ? Number(initialData.securityDeposit) : 250}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className={inputClasses}
             />
           </div>
         </div>
@@ -386,7 +475,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
             value={mainImageUrl}
             onChange={(e) => setMainImageUrl(e.target.value)}
             placeholder="https://images.unsplash.com/..."
-            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+            className={inputClasses}
           />
           {mainImageUrl && (
             <div className="mt-3 flex items-center gap-4">
@@ -413,7 +502,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
             type="text"
             defaultValue={initialGalleryString}
             placeholder="https://images.unsplash.com/1, https://images.unsplash.com/2"
-            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+            className={inputClasses}
           />
         </div>
 
@@ -426,7 +515,7 @@ export function VehicleForm({ categories, initialData }: VehicleFormProps) {
             type="text"
             defaultValue={initialFeaturesString}
             placeholder="Autopilot, Heated Seats, 360 Camera, Apple CarPlay, Bluetooth"
-            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-xs font-medium focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+            className={inputClasses}
           />
         </div>
       </div>
