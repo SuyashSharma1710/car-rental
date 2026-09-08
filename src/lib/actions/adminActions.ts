@@ -3,10 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { createVehicle, updateVehicle, updateVehicleStatus } from "@/lib/services/vehicleService";
 import { createCategory } from "@/lib/services/categoryService";
+import { requireAdminSession } from "@/lib/auth/session";
 import { VehicleStatus, TransmissionType, FuelType } from "@prisma/client";
 
 export async function createVehicleAction(formData: FormData) {
   try {
+    // 1. Enforce strict server-side authorization check
+    await requireAdminSession();
+
     const rawFeatures = (formData.get("features") as string) || "";
     const features = rawFeatures
       .split(",")
@@ -47,6 +51,7 @@ export async function createVehicleAction(formData: FormData) {
 
     revalidatePath("/cars");
     revalidatePath("/admin/vehicles");
+    revalidatePath("/admin/dashboard");
     revalidatePath("/");
     return { success: true };
   } catch (error: unknown) {
@@ -57,6 +62,9 @@ export async function createVehicleAction(formData: FormData) {
 
 export async function updateVehicleAction(id: string, formData: FormData) {
   try {
+    // 1. Enforce strict server-side authorization check
+    await requireAdminSession();
+
     const rawFeatures = (formData.get("features") as string) || "";
     const features = rawFeatures
       .split(",")
@@ -98,6 +106,7 @@ export async function updateVehicleAction(id: string, formData: FormData) {
     revalidatePath("/cars");
     revalidatePath(`/cars/${id}`);
     revalidatePath("/admin/vehicles");
+    revalidatePath("/admin/dashboard");
     return { success: true };
   } catch (error: unknown) {
     console.error("Failed to update vehicle:", error);
@@ -107,6 +116,9 @@ export async function updateVehicleAction(id: string, formData: FormData) {
 
 export async function toggleVehicleStatusAction(id: string, status: VehicleStatus) {
   try {
+    // 1. Enforce strict server-side authorization check
+    await requireAdminSession();
+
     await updateVehicleStatus(id, status);
     revalidatePath("/cars");
     revalidatePath(`/cars/${id}`);
@@ -121,6 +133,9 @@ export async function toggleVehicleStatusAction(id: string, status: VehicleStatu
 
 export async function createCategoryAction(formData: FormData) {
   try {
+    // 1. Enforce strict server-side authorization check
+    await requireAdminSession();
+
     const name = formData.get("name") as string;
     const slug = (formData.get("slug") as string) || name.toLowerCase().replace(/\s+/g, "-");
     const description = (formData.get("description") as string) || null;
@@ -135,6 +150,7 @@ export async function createCategoryAction(formData: FormData) {
 
     revalidatePath("/cars");
     revalidatePath("/admin/categories");
+    revalidatePath("/admin/dashboard");
     revalidatePath("/");
     return { success: true };
   } catch (error: unknown) {

@@ -308,6 +308,25 @@ async function main() {
   }
   console.log(`[SEED] Created/Verified ${vehiclesData.length} vehicles.`);
 
+  // 4. Admin Account
+  const { hashPassword } = await import("../src/lib/auth/password");
+  const adminPasswordHash = hashPassword("AdminPassword123!");
+  const adminAccount = await prisma.customer.upsert({
+    where: { email: "admin@tntrentals.com" },
+    update: {
+      fullName: "TNT Operations Admin",
+      role: "ADMIN",
+      passwordHash: adminPasswordHash,
+    },
+    create: {
+      email: "admin@tntrentals.com",
+      fullName: "TNT Operations Admin",
+      role: "ADMIN",
+      passwordHash: adminPasswordHash,
+    },
+  });
+  console.log(`[SEED] Created/Verified Admin User: ${adminAccount.email} (${adminAccount.role})`);
+
   console.log("Seeding finished successfully!");
 }
 
