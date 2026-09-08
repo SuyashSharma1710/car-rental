@@ -27,5 +27,14 @@
 - Strictly type all models, API boundaries, and booking state machines.
 - Use discriminated unions for booking, payment, and async operation states.
 
-## 6. Verification & Quality Gates
+## 6. Database & Data Safety Rules
+- **Non-Destructive Operations Rule**:
+  > **NEVER run destructive database commands (e.g. `db push --force-reset`, `migrate reset`, `DROP TABLE`) against a shared, test, or production database without explicit user approval.**
+- **Prisma Singleton**: Use `@/lib/db/prisma` singleton client.
+- **Financial Precision**: All monetary rates, taxes, and totals must use `Decimal(10, 2)`. Never use JS floating-point arithmetic for authoritative pricing.
+- **Booking Concurrency**: Enforce atomic transactions (`prisma.$transaction`) and date overlap logic on the server.
+- **Migration Strategy**: Use versioned migrations (`pnpm run db:migrate`) for schema changes and review SQL before deploying.
+
+## 7. Verification & Quality Gates
 - Always run `pnpm run build` or `pnpm lint` before marking tasks complete.
+

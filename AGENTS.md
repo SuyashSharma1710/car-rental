@@ -71,10 +71,31 @@ src/
 - **Booking States**: `DRAFT` → `HELD` (15-min timeout) → `CONFIRMED` → `ACTIVE` → `COMPLETED` → `CANCELLED`.
 - **Server Authority**: Never trust client-sent prices, dates, or discounts. Calculate and verify everything server-side.
 
-### 5. UI/UX & Accessibility Standards
+### 5. Database & Data Safety Rules
+- **Non-Destructive Operations Rule**:
+  > **NEVER run destructive database commands (e.g. `db push --force-reset`, `migrate reset`, `DROP TABLE`) against a shared, test, or production database without explicit user approval.**
+- **Prisma Conventions**:
+  - Always use the singleton client from `@/lib/db/prisma`.
+  - Regenerate client types via `pnpm run db:generate` whenever `prisma/schema.prisma` is modified.
+- **Environment & Secrets**:
+  - Store real database connection strings only in `.env` / `.env.local` (strictly ignored by `.gitignore`).
+  - `.env.example` must contain only generic dummy placeholders. Never print passwords or raw connection strings in logs or model responses.
+- **Migration Strategy**:
+  - Development: Use `pnpm run db:migrate` (`prisma migrate dev`) to create versioned SQL migrations.
+  - Production: Use `pnpm run db:deploy` (`prisma migrate deploy`) during deployment pipelines.
+  - Review all generated migration SQL before committing.
+- **Financial Precision**:
+  - Always use `Decimal(10, 2)` for monetary values (rates, taxes, deposits, totals). Never use JS floating-point arithmetic for authoritative calculations.
+  - Snapshot prices on the `Booking` record at creation time so future vehicle rate changes do not alter historical records.
+- **Concurrency & Double-Booking Prevention**:
+  - Prevent double bookings using atomic transactions (`prisma.$transaction`) with reservation hold states (`holdExpiresAt`) and date overlap logic:
+    `existing.startDate < reqEndDate AND existing.endDate > reqStartDate`.
+
+### 6. UI/UX & Accessibility Standards
 - Tailored automotive aesthetic with sleek contrast, responsive grids, and clear elevation.
 - Every interactive element must have defined states: `idle`, `hover`, `focus-visible`, `active`, `disabled`, `loading`, `empty`, `error`.
 - WCAG 2.1 AA compliant semantic HTML, keyboard focus traps, screen reader live regions, and high contrast.
+
 
 ---
 
