@@ -91,10 +91,27 @@ src/
   - Prevent double bookings using atomic transactions (`prisma.$transaction`) with reservation hold states (`holdExpiresAt`) and date overlap logic:
     `existing.startDate < reqEndDate AND existing.endDate > reqStartDate`.
 
-### 6. UI/UX & Accessibility Standards
-- Tailored automotive aesthetic with sleek contrast, responsive grids, and clear elevation.
-- Every interactive element must have defined states: `idle`, `hover`, `focus-visible`, `active`, `disabled`, `loading`, `empty`, `error`.
-- WCAG 2.1 AA compliant semantic HTML, keyboard focus traps, screen reader live regions, and high contrast.
+### 7. MVP SCOPE LOCK (Mandatory)
+The project is currently locked to **MVP only**.
+1. **Do not implement Phase 2+ functionality** without explicit user approval.
+2. **Do not add future-facing database models** without a current MVP requirement.
+3. **Do not add unnecessary dependencies** or complex enterprise layers.
+4. **Prefer simple, modular architecture** that can be expanded later.
+5. **Never sacrifice security, data integrity, testing, or accessibility** to rush the MVP.
+6. **Keep the booking flow complete** from fleet search through confirmation and self-service management.
+7. **Maintain clean extension points** for future functionality.
+
+### 8. FUTURE PHASES (Documentation Only — Do Not Implement)
+The following functionality is strictly deferred to future iterations:
+- Tour packages & excursion bookings
+- Destination itineraries & guides
+- Dedicated driver / chauffeur portal
+- Third-party vendor / fleet marketplace
+- Flight & hotel cross-integrations
+- Corporate accounts & loyalty rewards
+- Complex multi-currency & language localization
+- Advanced AI chatbot / smart dispatch systems
+
 
 
 ---

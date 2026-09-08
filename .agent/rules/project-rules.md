@@ -35,6 +35,12 @@
 - **Booking Concurrency**: Enforce atomic transactions (`prisma.$transaction`) and date overlap logic on the server.
 - **Migration Strategy**: Use versioned migrations (`pnpm run db:migrate`) for schema changes and review SQL before deploying.
 
-## 7. Verification & Quality Gates
+## 7. MVP Scope Lock (Strict)
+- **MVP-Only Focus**: Build the smallest complete production-quality car booking product.
+- **No Phase 2 Features**: Do not implement tours, drivers, marketplace, loyalty, multi-currency, or AI concierge in MVP.
+- **Clean Extension Points**: Keep architecture modular for seamless post-MVP expansion.
+
+## 8. Verification & Quality Gates
 - Always run `pnpm run build` or `pnpm lint` before marking tasks complete.
+
 
