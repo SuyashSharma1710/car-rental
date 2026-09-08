@@ -1,0 +1,215 @@
+// This is your Prisma schema file for TNT Car Booking
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum VehicleStatus {
+  AVAILABLE
+  RESERVED
+  RENTED
+  MAINTENANCE
+}
+
+enum TransmissionType {
+  AUTOMATIC
+  MANUAL
+}
+
+enum FuelType {
+  PETROL
+  DIESEL
+  ELECTRIC
+  HYBRID
+}
+
+enum BookingStatus {
+  DRAFT
+  HELD
+  CONFIRMED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum UserRole {
+  CUSTOMER
+  AGENT
+  ADMIN
+}
+
+model VehicleCategory {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?   @db.Text
+  image       String?
+  vehicles    Vehicle[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("vehicle_categories")
+}
+
+model Vehicle {
+  id                 String           @id @default(uuid())
+  make               String
+  model              String
+  year               Int
+  licensePlate       String           @unique
+  vin                String?          @unique
+  categoryId         String
+  category           VehicleCategory  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  status             VehicleStatus    @default(AVAILABLE)
+  transmission       TransmissionType @default(AUTOMATIC)
+  fuelType           FuelType         @default(PETROL)
+  seats              Int              @default(5)
+  doors              Int              @default(4)
+  luggageCapacity    Int              @default(2)
+  mileage            Int              @default(0)
+  dailyRate          Decimal          @db.Decimal(10, 2)
+  hourlyRate         Decimal?         @db.Decimal(10, 2)
+  securityDeposit    Decimal          @default(0.00) @db.Decimal(10, 2)
+  isFeatured         Boolean          @default(false)
+  mainImage          String
+  galleryImages      Json?
+  features           Json?
+  location           String           @default("Main Hub")
+  bookings           Booking[]
+  reviews            Review[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([dailyRate])
+  @@map("vehicles")
+}
+
+model Customer {
+  id                  String    @id @default(uuid())
+  email               String    @unique
+  fullName            String
+  phone               String?
+  driverLicenseNumber String?
+  driverLicenseExpiry DateTime?
+  role                UserRole  @default(CUSTOMER)
+  bookings            Booking[]
+  reviews             Review[]
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@map("customers")
+}
+
+model Booking {
+  id                 String               @id @default(uuid())
+  bookingReference   String               @unique // e.g. TNT-2026-8941
+  customerId         String
+  customer           Customer             @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  vehicleId          String
+  vehicle            Vehicle              @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+  pickupLocation     String
+  dropoffLocation    String
+  pickupDate         DateTime
+  dropoffDate        DateTime
+  status             BookingStatus        @default(DRAFT)
+  basePrice          Decimal              @db.Decimal(10, 2)
+  addOnTotal         Decimal              @default(0.00) @db.Decimal(10, 2)
+  taxAmount          Decimal              @default(0.00) @db.Decimal(10, 2)
+  discountAmount     Decimal              @default(0.00) @db.Decimal(10, 2)
+  totalAmount        Decimal              @db.Decimal(10, 2)
+  securityDeposit    Decimal              @default(0.00) @db.Decimal(10, 2)
+  holdExpiresAt      DateTime?
+  cancellationReason String?              @db.Text
+  cancelledAt        DateTime?
+  bookingAddons      BookingAddon[]
+  transactions       PaymentTransaction[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  @@index([vehicleId, pickupDate, dropoffDate])
+  @@index([customerId])
+  @@index([status])
+  @@index([bookingReference])
+  @@map("bookings")
+}
+
+model Addon {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  slug          String         @unique
+  description   String?        @db.Text
+  dailyRate     Decimal        @db.Decimal(10, 2)
+  isMandatory   Boolean        @default(false)
+  bookingAddons BookingAddon[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@map("addons")
+}
+
+model BookingAddon {
+  id         String   @id @default(uuid())
+  bookingId  String
+  booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  addonId    String
+  addon      Addon    @relation(fields: [addonId], references: [id], onDelete: Restrict)
+  quantity   Int      @default(1)
+  unitPrice  Decimal  @db.Decimal(10, 2)
+  totalPrice Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now())
+
+  @@unique([bookingId, addonId])
+  @@map("booking_addons")
+}
+
+model PaymentTransaction {
+  id                   String        @id @default(uuid())
+  bookingId            String
+  booking              Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  transactionReference String        @unique
+  amount               Decimal       @db.Decimal(10, 2)
+  currency             String        @default("USD")
+  status               PaymentStatus @default(PENDING)
+  paymentMethod        String? // e.g. "CREDIT_CARD", "STRIPE", "PAYPAL"
+  paymentGateway       String? // e.g. "STRIPE"
+  gatewayResponse      Json?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  @@index([bookingId])
+  @@index([transactionReference])
+  @@map("payment_transactions")
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  vehicleId  String
+  vehicle    Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  rating     Int      @default(5) // 1 to 5
+  comment    String?  @db.Text
+  isVerified Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([vehicleId])
+  @@index([customerId])
+  @@map("reviews")
+}
