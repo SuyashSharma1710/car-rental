@@ -35,6 +35,9 @@ export function CategoryForm() {
     });
   };
 
+  const inputClasses =
+    "w-full rounded-xl border border-neutral-300 bg-white px-3.5 py-2 text-xs font-medium text-neutral-900 shadow-sm focus:border-purple-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -67,7 +70,7 @@ export function CategoryForm() {
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
           placeholder="e.g. Electric & Hybrid, Sports Luxury"
-          className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2 text-xs font-medium focus:border-purple-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+          className={inputClasses}
         />
       </div>
 
@@ -82,7 +85,7 @@ export function CategoryForm() {
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
           placeholder="e.g. electric-hybrid"
-          className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2 text-xs font-mono font-medium focus:border-purple-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+          className={`${inputClasses} font-mono`}
         />
       </div>
 
@@ -94,7 +97,7 @@ export function CategoryForm() {
           name="description"
           rows={2}
           placeholder="Brief description of this segment"
-          className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2 text-xs font-medium focus:border-purple-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+          className={inputClasses}
         />
       </div>
 
@@ -106,7 +109,7 @@ export function CategoryForm() {
           name="image"
           type="url"
           placeholder="https://images.unsplash.com/..."
-          className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2 text-xs font-medium focus:border-purple-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+          className={inputClasses}
         />
       </div>
 

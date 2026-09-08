@@ -56,11 +56,17 @@ export function HeroSearch({ categories }: HeroSearchProps) {
               id="location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-10 pr-4 text-xs font-semibold text-neutral-900 focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className="w-full rounded-xl border border-neutral-300 bg-white py-2.5 pl-10 pr-4 text-xs font-semibold text-neutral-900 shadow-sm focus:border-sky-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
             >
-              <option value="Main Terminal Hub">Main Terminal Central Hub</option>
-              <option value="Airport VIP Hub">Airport VIP Terminal</option>
-              <option value="Downtown Executive Hub">Downtown Financial Plaza</option>
+              <option value="Main Terminal Hub" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
+                Main Terminal Central Hub
+              </option>
+              <option value="Airport VIP Hub" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
+                Airport VIP Terminal
+              </option>
+              <option value="Downtown Executive Hub" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
+                Downtown Financial Plaza
+              </option>
             </select>
           </div>
         </div>
@@ -76,11 +82,17 @@ export function HeroSearch({ categories }: HeroSearchProps) {
               id="heroCategory"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-10 pr-4 text-xs font-semibold text-neutral-900 focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className="w-full rounded-xl border border-neutral-300 bg-white py-2.5 pl-10 pr-4 text-xs font-semibold text-neutral-900 shadow-sm focus:border-sky-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
             >
-              <option value="">All Vehicle Categories</option>
+              <option value="" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
+                All Vehicle Categories
+              </option>
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.slug}>
+                <option
+                  key={cat.id}
+                  value={cat.slug}
+                  className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
+                >
                   {cat.name}
                 </option>
               ))}
@@ -100,7 +112,7 @@ export function HeroSearch({ categories }: HeroSearchProps) {
               type="date"
               value={pickupDate}
               onChange={(e) => setPickupDate(e.target.value)}
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-10 pr-3 text-xs font-semibold text-neutral-900 focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+              className="w-full rounded-xl border border-neutral-300 bg-white py-2.5 pl-10 pr-3 text-xs font-semibold text-neutral-900 shadow-sm focus:border-sky-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
             />
           </div>
         </div>
