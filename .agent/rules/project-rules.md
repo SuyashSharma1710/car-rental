@@ -1,29 +1,13 @@
-<!-- BEGIN:nextjs-agent-rules -->
-
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
-
 # Project Agent Rules & Development Standards
 
 ## 1. Version Control & Git Workflow
 - **Commit Every Change**: Commit every logical unit of change or user-requested task promptly.
-- **Conventional Commits**: Use clear, standard commit prefixes:
-  - `feat:` for new features
-  - `fix:` for bug fixes
-  - `refactor:` for code refactoring
-  - `style:` for styling / UI adjustments
-  - `chore:` for dependencies, config, and maintenance
-  - `docs:` for documentation updates
-- **Repository Cleanliness**: Never commit temporary files, scratch scripts, or unneeded artifacts. Ensure `.gitignore` is maintained.
+- **Conventional Commits**: Use clear, standard commit prefixes (`feat:`, `fix:`, `refactor:`, `style:`, `chore:`, `docs:`).
+- **Clean Repository**: Maintain `.gitignore` and avoid committing temporary or scratch files.
 
 ## 2. Package Manager & Tooling
 - **Package Manager**: Exclusively use `pnpm` (e.g., `pnpm add <pkg>`, `pnpm run dev`, `pnpm run build`, `pnpm run lint`).
-- **Framework Versioning**: Respect Next.js 16+ App Router and React 19 paradigms. Remember that `params` and `searchParams` in App Router page/layout props are Promises and must be awaited.
+- **Framework Versioning**: Respect Next.js 16+ App Router and React 19 paradigms. Remember that `params` and `searchParams` in page/layout props are Promises and must be awaited.
 
 ## 3. Architecture & Code Structure (Car Rental App)
 - **Directory Organization**:
@@ -48,4 +32,3 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## 6. Verification & Testing
 - **Validation Before Completion**: Always run `pnpm run build` or `pnpm run lint` to verify that there are zero TypeScript compilation errors or broken imports before concluding tasks.
-
