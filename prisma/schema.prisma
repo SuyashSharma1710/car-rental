@@ -1,4 +1,4 @@
-// This is your Prisma schema file for TNT Car Booking
+// This is your Prisma schema file for TNT Car Booking (MVP)
 // Learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
@@ -103,6 +103,7 @@ model Vehicle {
 model Customer {
   id                  String    @id @default(uuid())
   email               String    @unique
+  passwordHash        String?   // Hashed password for email/password authentication
   fullName            String
   phone               String?
   driverLicenseNumber String?
@@ -139,6 +140,7 @@ model Booking {
   cancelledAt        DateTime?
   bookingAddons      BookingAddon[]
   transactions       PaymentTransaction[]
+  review             Review?
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 
@@ -203,6 +205,8 @@ model Review {
   vehicle    Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   customerId String
   customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  bookingId  String?  @unique // 1-to-1 link ensuring at most one review per verified booking
+  booking    Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
   rating     Int      @default(5) // 1 to 5
   comment    String?  @db.Text
   isVerified Boolean  @default(true)
