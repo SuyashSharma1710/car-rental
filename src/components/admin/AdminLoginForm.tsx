@@ -55,7 +55,7 @@ export function AdminLoginForm() {
             autoComplete="email"
             required
             placeholder="admin@tntrentals.com"
-            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-10 pr-3.5 text-xs font-medium text-neutral-900 focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+            className="w-full rounded-xl border border-neutral-300 bg-white py-2.5 pl-10 pr-3.5 text-xs font-medium text-neutral-900 shadow-sm focus:border-sky-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           />
         </div>
       </div>
@@ -76,7 +76,7 @@ export function AdminLoginForm() {
             autoComplete="current-password"
             required
             placeholder="••••••••••••"
-            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pl-10 pr-3.5 text-xs font-medium text-neutral-900 focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-white"
+            className="w-full rounded-xl border border-neutral-300 bg-white py-2.5 pl-10 pr-3.5 text-xs font-medium text-neutral-900 shadow-sm focus:border-sky-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
           />
         </div>
       </div>

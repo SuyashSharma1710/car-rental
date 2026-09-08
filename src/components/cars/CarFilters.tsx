@@ -126,11 +126,11 @@ export function CarFilters({ categories }: CarFiltersProps) {
           id="transmission"
           value={currentTransmission}
           onChange={(e) => updateFilters({ transmission: e.target.value })}
-          className="mt-2 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-sm text-neutral-900 focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-900 dark:text-white"
+          className="mt-2 w-full rounded-xl border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 shadow-sm focus:border-sky-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
         >
-          <option value="">Any Transmission</option>
-          <option value="AUTOMATIC">Automatic Only</option>
-          <option value="MANUAL">Manual Only</option>
+          <option value="" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">Any Transmission</option>
+          <option value="AUTOMATIC" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">Automatic Only</option>
+          <option value="MANUAL" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">Manual Only</option>
         </select>
       </div>
 
@@ -143,13 +143,13 @@ export function CarFilters({ categories }: CarFiltersProps) {
           id="fuelType"
           value={currentFuel}
           onChange={(e) => updateFilters({ fuelType: e.target.value })}
-          className="mt-2 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3.5 py-2.5 text-sm text-neutral-900 focus:border-sky-500 focus:bg-white focus:outline-none dark:border-neutral-800 dark:bg-neutral-900 dark:text-white"
+          className="mt-2 w-full rounded-xl border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 shadow-sm focus:border-sky-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
         >
-          <option value="">All Fuel Types</option>
-          <option value="ELECTRIC">Electric (EV)</option>
-          <option value="HYBRID">Hybrid</option>
-          <option value="PETROL">Petrol</option>
-          <option value="DIESEL">Diesel</option>
+          <option value="" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">All Fuel Types</option>
+          <option value="ELECTRIC" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">Electric (EV)</option>
+          <option value="HYBRID" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">Hybrid</option>
+          <option value="PETROL" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">Petrol</option>
+          <option value="DIESEL" className="bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">Diesel</option>
         </select>
       </div>
 

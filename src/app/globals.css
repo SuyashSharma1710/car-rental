@@ -42,9 +42,32 @@ select, input, textarea {
   color-scheme: light dark;
 }
 
+/* Ensure text selection inside inputs and document has clear high contrast */
+::selection {
+  background-color: #0284c7;
+  color: #ffffff;
+}
+
+input::selection,
+textarea::selection {
+  background-color: #0284c7;
+  color: #ffffff;
+}
+
 select option {
   background-color: var(--card);
   color: var(--card-foreground);
+}
+
+/* Ensure browser autofill matches theme backgrounds and never renders white text on white bg */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--foreground) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--card) inset !important;
+  box-shadow: 0 0 0px 1000px var(--card) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 /* Custom subtle scrollbar */
@@ -65,3 +88,4 @@ select option {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b888;
 }
+
