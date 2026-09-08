@@ -19,9 +19,7 @@ export async function getCategoriesWithCounts() {
       include: {
         _count: {
           select: {
-            vehicles: {
-              where: { status: "AVAILABLE" },
-            },
+            vehicles: true,
           },
         },
       },
@@ -56,5 +54,22 @@ export async function updateCategory(id: string, input: CategoryUpdateInput): Pr
   return await prisma.vehicleCategory.update({
     where: { id },
     data: validated,
+  });
+}
+
+export async function deleteCategory(id: string): Promise<VehicleCategory> {
+  // Check if any vehicles reference this category
+  const linkedVehiclesCount = await prisma.vehicle.count({
+    where: { categoryId: id },
+  });
+
+  if (linkedVehiclesCount > 0) {
+    throw new Error(
+      `Cannot delete category: ${linkedVehiclesCount} vehicle(s) are currently assigned to this category. Reassign or delete those vehicles first.`
+    );
+  }
+
+  return await prisma.vehicleCategory.delete({
+    where: { id },
   });
 }

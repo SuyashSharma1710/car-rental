@@ -8,7 +8,7 @@ import {
 } from "../src/lib/auth/session";
 import { AdminLoginSchema } from "../src/lib/validations/auth";
 import { UserRole } from "@prisma/client";
-import { createVehicleAction, updateVehicleAction, toggleVehicleStatusAction, createCategoryAction } from "../src/lib/actions/adminActions";
+import { createVehicleAction, updateVehicleAction, toggleVehicleStatusAction, createCategoryAction, updateCategoryAction, deleteCategoryAction } from "../src/lib/actions/adminActions";
 
 test("Auth Security - Password Hashing produces unique salted hash", () => {
   const plainPassword = "SuperSecureAdminPassword2026!";
@@ -153,4 +153,13 @@ test("Auth Security - Server Actions reject unauthenticated calls", async () => 
   const createCategoryRes = await createCategoryAction(emptyFormData);
   assert.equal(createCategoryRes.success, false);
   assert.ok(createCategoryRes.error?.toLowerCase().includes("unauthorized") || createCategoryRes.error?.toLowerCase().includes("privileges"));
+
+  const updateCategoryRes = await updateCategoryAction("fake-id", emptyFormData);
+  assert.equal(updateCategoryRes.success, false);
+  assert.ok(updateCategoryRes.error?.toLowerCase().includes("unauthorized") || updateCategoryRes.error?.toLowerCase().includes("privileges"));
+
+  const deleteCategoryRes = await deleteCategoryAction("fake-id");
+  assert.equal(deleteCategoryRes.success, false);
+  assert.ok(deleteCategoryRes.error?.toLowerCase().includes("unauthorized") || deleteCategoryRes.error?.toLowerCase().includes("privileges"));
 });
+

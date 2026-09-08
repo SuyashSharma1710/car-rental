@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createVehicle, updateVehicle, updateVehicleStatus } from "@/lib/services/vehicleService";
-import { createCategory } from "@/lib/services/categoryService";
+import { createCategory, updateCategory, deleteCategory } from "@/lib/services/categoryService";
 import { requireAdminSession } from "@/lib/auth/session";
 import { VehicleStatus, TransmissionType, FuelType } from "@prisma/client";
 
@@ -156,5 +156,51 @@ export async function createCategoryAction(formData: FormData) {
   } catch (error: unknown) {
     console.error("Failed to create category:", error);
     return { success: false, error: error instanceof Error ? error.message : "Failed to create category." };
+  }
+}
+
+export async function updateCategoryAction(id: string, formData: FormData) {
+  try {
+    // 1. Enforce strict server-side authorization check
+    await requireAdminSession();
+
+    const name = formData.get("name") as string;
+    const slug = formData.get("slug") as string;
+    const description = (formData.get("description") as string) || null;
+    const image = (formData.get("image") as string) || null;
+
+    await updateCategory(id, {
+      name,
+      slug,
+      description,
+      image,
+    });
+
+    revalidatePath("/cars");
+    revalidatePath("/admin/categories");
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/");
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Failed to update category:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Failed to update category." };
+  }
+}
+
+export async function deleteCategoryAction(id: string) {
+  try {
+    // 1. Enforce strict server-side authorization check
+    await requireAdminSession();
+
+    await deleteCategory(id);
+
+    revalidatePath("/cars");
+    revalidatePath("/admin/categories");
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/");
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Failed to delete category:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Failed to delete category." };
   }
 }
